@@ -1,0 +1,337 @@
+<?xml version="1.0" ?>
+<robot name="tern">
+ <!-- <origin rpy="0 0 0" xyz="0 0 0.2"/> -->
+   <link name="base_link"></link>
+  <link name="base_link_inertia">
+    <!-- <origin rpy="0 0 0" xyz="0 0 0.14"> -->
+    <inertial>
+      <mass value="0.5"/>
+      <origin rpy="0  0  0" xyz="0     0     0.157"/>
+      <inertia ixx="0.0147563" ixy="0" ixz="0" iyy="0.00638929" iyz="0" izz="0.0177"/>
+    </inertial>
+    <collision name="base_link_collision">
+      <origin rpy="0  0  0" xyz="0    0    0"/>
+      <geometry>
+        <box size="0.15 0.63 0.28"/>
+      </geometry>
+    </collision>
+    <visual name="base_link_visual">
+      <origin rpy="0   -1.57  1.57" xyz="-0.116  0.345  -0.128"/>
+      <geometry>
+        <mesh filename="package://urdf_tutorial/meshes/frame.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <visual name="m0">
+      <origin rpy="0  0  0" xyz="0    -0.205  0.13"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.02"/>
+      </geometry>
+    </visual>
+    <visual name="m1">
+      <origin rpy="0  0  0" xyz="0     0.205  0.13"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.02"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="tern/base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_link_inertia"/>
+    <origin rpy="0  0  0" xyz="0 0 0"/>
+  </joint>
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.015"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="1e-05" ixy="0" ixz="0" iyy="1e-05" iyz="0" izz="1e-05"/>
+    </inertial>
+  </link>
+  <link name="rotor_left">
+    <inertial>
+      <mass value="0.005"/>
+      <origin rpy="0  0  0" xyz="0 -0.205 0.17"/>
+      <!-- <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/> -->
+      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/>
+    </inertial>
+    <collision name="rotor_left_collision">
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.005" radius="0.1"/>
+      </geometry>
+    </collision>
+    <visual name="rotor_left_visual">
+      <origin rpy="0  0  0" xyz="0.00059  -0 0"/>
+      <geometry>
+        <mesh filename="package://urdf_tutorial/meshes/iris_prop_cw.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="rotor_right">
+    <inertial>
+      <mass value="0.005"/>
+      <origin rpy="0  0  0" xyz="0 0.205 0.17"/>
+      <!-- <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/> -->
+      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/>
+    </inertial>
+    <collision name="rotor_right_collision">
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.005" radius="0.1"/>
+      </geometry>
+    </collision>
+    <visual name="rotor_right_visual">
+      <origin rpy="0  0  0" xyz="0.00449 0 0"/>
+      <geometry>
+        <mesh filename="package://urdf_tutorial/meshes/iris_prop_ccw.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="left_elevon">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0  0  0" xyz="0      -0.225    0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual name="left_elevon_visual">
+      <origin rpy="0    1.57079  1.57079" xyz="0.005 -0.31  0.133"/>
+      <geometry>
+        <mesh filename="package://urdf_tutorial/meshes/elevon_2.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <!--
+    <collision>
+        <origin rpy="0 0 0" xyz="0 -0.31 0.13"/>
+        <geometry>
+            <box size="0.0114356 0.19935 0.0811021" />
+        </geometry>
+    </collision>
+    -->
+  </link>
+  <link name="right_elevon">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0  0  0" xyz="0       0.225    0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual name="right_elevon_visual">
+      <origin rpy="0    1.57079  1.57079" xyz="0.005 -0.347 0.133"/>
+      <geometry>
+        <mesh filename="package://urdf_tutorial/meshes/elevon_2.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <!--
+    <collision>
+        <origin rpy="0 0 0" xyz="0 0.31 0.13"/>
+        <geometry>
+            <box size="0.0114356 0.19935 0.0811021" />
+        </geometry>
+    </collision>
+    -->
+  </link>
+  <joint name="tern/imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin rpy="0  0  0" xyz="0     0     0"/>
+    <axis xyz="0  0  0"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+  <joint name="left_rotor_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rotor_left"/>
+    <origin rpy="0  0  0" xyz="0    -0.205  0.152"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="1.0" lower="-1000" upper="1000" velocity="1000.0"/>
+    <!-- <dynamics damping="0.01" friction="0.0" /> -->
+  </joint>
+  <joint name="right_rotor_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rotor_right"/>
+    <origin rpy="0  0  0" xyz="0     0.205  0.152"/>
+    <axis xyz="0  0  1"/>
+    <limit effort="1.0" lower="-1000" upper="1000" velocity="1000.0"/>
+    <!-- <dynamics damping="0.01" friction="0.0" /> -->
+  </joint>
+  <joint name="left_elevon_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="left_elevon"/>
+    <origin rpy="0  0  0" xyz="0   -0.225325  -0.005"/>
+    <axis xyz="0  1  0"/>
+    <limit effort="0.1" lower="-1.57" upper="1.57" velocity="100.0"/>
+  </joint>
+  <joint name="right_elevon_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="right_elevon"/>
+    <origin rpy="0  0  0" xyz="0    0.225325  -0.005"/>
+    <axis xyz="0  1  0"/>
+    <limit effort="0.1" lower="-1.57" upper="1.57" velocity="100.0"/>
+  </joint>
+  
+  <transmission name="left_rotor_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_rotor_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_rotor_actuator">
+        <hardwareInterface>hardware_interface/EffortActuatorInterface</hardwareInterface>
+    </actuator>
+  </transmission>
+  
+  <transmission name="right_rotor_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_rotor_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_rotor_actuator">
+        <hardwareInterface>hardware_interface/EffortActuatorInterface</hardwareInterface>
+    </actuator>
+  </transmission>
+  
+  <transmission name="left_elevon_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_elevon_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_elevon_actuator">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+  <transmission name="right_elevon_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_elevon_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_elevon_actuator">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+  <gazebo>
+  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    <robotNamespace>/tern</robotNamespace>
+  </plugin>
+</gazebo>
+
+    <gazebo reference="base_link_inertia">
+        <plugin name="left_wing" filename="libLiftDragPlugin.so">
+          <a0>0.05984281113</a0>
+          <cla>4.752798721</cla>
+          <cda>0.6417112299</cda>
+          <cma>-1.8</cma>
+          <alpha_stall>0.6391428111</alpha_stall>
+          <cla_stall>-3.85</cla_stall>
+          <cda_stall>-0.9233984055</cda_stall>
+          <cma_stall>0</cma_stall>
+          <cp>0 0.3 0.0</cp>
+          <area>0.15</area>
+          <air_density>1.2041</air_density>
+          <forward>0 0 1</forward>
+          <upward>1 0 0</upward>
+          <link_name>base_link_inertia</link_name>
+          <control_joint_name>
+            left_elevon_joint
+          </control_joint_name>
+          <control_joint_rad_to_cl>-0.5</control_joint_rad_to_cl>
+        </plugin>
+        <plugin name="right_wing" filename="libLiftDragPlugin.so">
+          <a0>0.05984281113</a0>
+          <cla>4.752798721</cla>
+          <cda>0.6417112299</cda>
+          <cma>-1.8</cma>
+          <alpha_stall>0.6391428111</alpha_stall>
+          <cla_stall>-3.85</cla_stall>
+          <cda_stall>-0.9233984055</cda_stall>
+          <cma_stall>0</cma_stall>
+          <cp>0 -0.3 -0.0</cp>
+          <area>0.15</area>
+          <air_density>1.2041</air_density>
+          <forward>0 0 1</forward>
+          <upward>1 0 0</upward>
+          <link_name>base_link_inertia</link_name>
+          <control_joint_name>
+            right_elevon_joint
+          </control_joint_name>
+          <control_joint_rad_to_cl>-0.5</control_joint_rad_to_cl>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+        <plugin name='rotors_gazebo_imu_plugin' filename='libgazebo_imu_plugin.so'>
+          <robotNamespace></robotNamespace>
+          <linkName>imu_link</linkName>
+          <imuTopic>/imu</imuTopic>
+          <gyroscopeNoiseDensity>0.0003394</gyroscopeNoiseDensity>
+          <gyroscopeRandomWalk>3.8785e-05</gyroscopeRandomWalk>
+          <gyroscopeBiasCorrelationTime>1000.0</gyroscopeBiasCorrelationTime>
+          <gyroscopeTurnOnBiasSigma>0.0087</gyroscopeTurnOnBiasSigma>
+          <accelerometerNoiseDensity>0.004</accelerometerNoiseDensity>
+          <accelerometerRandomWalk>0.006</accelerometerRandomWalk>
+          <accelerometerBiasCorrelationTime>300.0</accelerometerBiasCorrelationTime>
+          <accelerometerTurnOnBiasSigma>0.196</accelerometerTurnOnBiasSigma>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+    <!--
+        <plugin name='left_motor_model' filename='libgazebo_motor_model.so'>
+          <robotNamespace></robotNamespace>
+          <jointName>left_rotor_joint</jointName>
+          <linkName>rotor_left</linkName>
+          <turningDirection>cw</turningDirection>
+          <timeConstantUp>0.016</timeConstantUp>
+          <timeConstantDown>0.020</timeConstantDown>
+          <maxRotVelocity>800</maxRotVelocity>
+          <motorConstant>7.864e-06</motorConstant>
+          <momentConstant>0.023</momentConstant>
+          <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+          <motorNumber>1</motorNumber>
+          <rotorDragCoefficient>0</rotorDragCoefficient>
+          <rollingMomentCoefficient>0</rollingMomentCoefficient>
+          <motorSpeedPubTopic>/motor_speed/0</motorSpeedPubTopic>
+          <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
+        </plugin>
+        
+        <plugin name='right_motor_model' filename='libgazebo_motor_model.so'>
+          <robotNamespace></robotNamespace>
+          <jointName>right_rotor_joint</jointName>
+          <linkName>rotor_right</linkName>
+          <turningDirection>ccw</turningDirection>
+          <timeConstantUp>0.016</timeConstantUp>
+          <timeConstantDown>0.020</timeConstantDown>
+          <maxRotVelocity>800</maxRotVelocity>
+          <motorConstant>7.864e-06</motorConstant>
+          <momentConstant>0.023</momentConstant>
+          <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+          <motorNumber>0</motorNumber>
+          <rotorDragCoefficient>0</rotorDragCoefficient>
+          <rollingMomentCoefficient>0</rollingMomentCoefficient>
+          <motorSpeedPubTopic>/motor_speed/1</motorSpeedPubTopic>
+          <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
+        </plugin>
+        
+        -->
+        <!-- <plugin name='rotors_gazebo_imu_plugin' filename='librotors_gazebo_imu_plugin.so'> -->
+        
+
+        <plugin name="gps_plugin" filename="libgazebo_gps_plugin.so">
+            <robotNamespace></robotNamespace>
+            <gpsNoise>true</gpsNoise>
+        </plugin>
+        <plugin name='magnetometer_plugin' filename='libgazebo_magnetometer_plugin.so'>
+          <robotNamespace/>
+          <pubRate>20</pubRate>
+          <noiseDensity>0.0004</noiseDensity>
+          <randomWalk>6.4e-06</randomWalk>
+          <biasCorrelationTime>600</biasCorrelationTime>
+          <magTopic>/mag</magTopic>
+        </plugin>
+        <plugin name='barometer_plugin' filename='libgazebo_barometer_plugin.so'>
+          <robotNamespace/>
+          <pubRate>10</pubRate>
+          <baroTopic>/baro</baroTopic>
+        </plugin>
+        
+    </gazebo>  
+</robot>
