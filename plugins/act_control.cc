@@ -136,43 +136,6 @@ namespace gazebo
             this -> actuators_sub[i] = this -> rosNode -> subscribe(solr);
         }
 
-        // solr = ros::SubscribeOptions::create<std_msgs::Float32>(
-        //     "/" + this -> model -> GetName() + "/" + this -> actuator_joint[0] -> GetName(), 
-        //     1,
-        //     boost::bind(&TernPlugin::left_rotor_sub, this, _1),
-        //     ros::VoidPtr(), &this -> rosQueue);
-        // this -> leftRotorSub = this -> rosNode -> subscribe(solr);
-
-        // solr = ros::SubscribeOptions::create<std_msgs::Float32>(
-        //     "/" + this -> model -> GetName() + "/" + this -> actuator_joint[1] -> GetName(), 
-        //     1,
-        //     boost::bind(&TernPlugin::right_rotor_sub, this, _1),
-        //     ros::VoidPtr(), &this -> rosQueue);
-        // this -> rightRotorSub = this -> rosNode -> subscribe(solr);
-
-        // solr = ros::SubscribeOptions::create<std_msgs::Float32>(
-        //     "/" + this -> model -> GetName() + "/" + this -> actuator_joint[2] -> GetName(), 
-        //     1,
-        //     boost::bind(&TernPlugin::left_elevon_sub, this, _1),
-        //     ros::VoidPtr(), &this -> rosQueue);
-        // this -> leftElevonSub = this -> rosNode -> subscribe(solr);
-
-        // solr = ros::SubscribeOptions::create<std_msgs::Float32>(
-        //     "/" + this -> model -> GetName() + "/" + this -> actuator_joint[3] -> GetName(), 
-        //     1,
-        //     boost::bind(&TernPlugin::right_elevon_sub, this, _1),
-        //     ros::VoidPtr(), &this -> rosQueue);
-        // this -> rightElevonSub = this -> rosNode -> subscribe(solr);
-
-
-        // ros::SubscribeOptions so =
-        // ros::SubscribeOptions::create<std_msgs::Float32Ptr>(
-        //     "/" + this->model->GetName() + "/vel_cmd",
-        //     1,
-        //     std::bind(&TernPlugin::OnActInput, this, _1),
-        //     ros::VoidPtr(), &this->rosQueue);
-        // this->rosSub = this->rosNode->subscribe(so);
-
         // Spin up the queue helper thread.
         this->rosQueueThread =
         std::thread(std::bind(&TernPlugin::QueueThread, this));
@@ -198,27 +161,6 @@ namespace gazebo
     void get_act_data(const std_msgs::Float32::ConstPtr& msg, int i) {
         this -> actuator_input[i] = *msg;
     }
-
-    // void left_rotor_sub(const std_msgs::Float32::ConstPtr& msg) {
-    //     this -> actuator_input[0] = *msg;
-    //     std::cout << "value changed to : " << actuator_input[0].data << "\n";
-    // }
-
-    // void right_rotor_sub(const std_msgs::Float32::ConstPtr& msg) {
-    //     this -> actuator_input[1] = *msg;
-    // }
-
-    // void left_elevon_sub(const std_msgs::Float32::ConstPtr& msg) {
-    //     this -> actuator_input[2] = *msg;
-    // }
-
-    // void right_elevon_sub(const std_msgs::Float32::ConstPtr& msg) {
-    //     this -> actuator_input[3] = *msg;
-    // }
-
-    // private: void OnActInput(const std_msgs::Float32Ptr msg) {
-    //     this -> actuator_input = msg;
-    // }
 
     void elevonControlRoutine(int id) {
         // float curr_error = this -> actuator_joint[id] -> GetAngle(0).Radians();
