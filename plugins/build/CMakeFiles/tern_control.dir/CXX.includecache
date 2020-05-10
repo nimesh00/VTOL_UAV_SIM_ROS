@@ -15,7 +15,9 @@ gazebo/transport/transport.hh
 -
 gazebo/msgs/msgs.hh
 -
-gazebo/common/common.hh
+gazebo/common/Timer.hh
+-
+vector
 -
 thread
 -
@@ -27,6 +29,10 @@ ros/subscribe_options.h
 /home/nimesh/catkin_ws/src/tern/plugins/ros/subscribe_options.h
 std_msgs/Float32.h
 /home/nimesh/catkin_ws/src/tern/plugins/std_msgs/Float32.h
+std_msgs/Time.h
+/home/nimesh/catkin_ws/src/tern/plugins/std_msgs/Time.h
+rosgraph_msgs/Clock.h
+/home/nimesh/catkin_ws/src/tern/plugins/rosgraph_msgs/Clock.h
 
 /opt/ros/melodic/include/ros/advertise_options.h
 ros/forwards.h
@@ -704,7 +710,39 @@ ros/forwards.h
 
 /opt/ros/melodic/include/rosconsole/macros_generated.h
 
+/opt/ros/melodic/include/rosgraph_msgs/Clock.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+
 /opt/ros/melodic/include/std_msgs/Float32.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+
+/opt/ros/melodic/include/std_msgs/Time.h
 string
 -
 vector

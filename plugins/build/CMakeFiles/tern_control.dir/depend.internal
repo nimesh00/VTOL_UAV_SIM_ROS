@@ -61,7 +61,9 @@ CMakeFiles/tern_control.dir/act_control.cc.o
  /opt/ros/melodic/include/ros/wall_timer.h
  /opt/ros/melodic/include/ros/wall_timer_options.h
  /opt/ros/melodic/include/rosconsole/macros_generated.h
+ /opt/ros/melodic/include/rosgraph_msgs/Clock.h
  /opt/ros/melodic/include/std_msgs/Float32.h
+ /opt/ros/melodic/include/std_msgs/Time.h
  /opt/ros/melodic/include/xmlrpcpp/XmlRpcDecl.h
  /opt/ros/melodic/include/xmlrpcpp/XmlRpcValue.h
  /usr/include/gazebo-9/gazebo/Master.hh

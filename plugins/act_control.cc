@@ -5,13 +5,16 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/transport/transport.hh>
 #include <gazebo/msgs/msgs.hh>
-#include <gazebo/common/common.hh>
+#include <gazebo/common/Timer.hh>
+#include <vector>
 
 #include <thread>
 #include "ros/ros.h"
 #include "ros/callback_queue.h"
 #include "ros/subscribe_options.h"
 #include "std_msgs/Float32.h"
+#include "std_msgs/Time.h"
+#include "rosgraph_msgs/Clock.h"
 
 namespace gazebo
 {
@@ -45,18 +48,22 @@ namespace gazebo
     private: event::ConnectionPtr updateConnection; 
 
     private:
-        std_msgs::Float32 actuator_input[4];
+        float actuator_input[4];
         physics::Joint_V actuator_joint;
 
     /// \brief A PID controller for the joint.
     private: common::PID pid;
 
-    ros::Subscriber leftRotorSub;
-    ros::Subscriber rightRotorSub;
-    ros::Subscriber leftElevonSub;
-    ros::Subscriber rightElevonSub;
+    float curr_time, prev_time;
+
+    // vector<vector<float>> PID_c;
+    float Kp[4], Kd[4], Ki[4];
 
     ros::Subscriber actuators_sub[4];
+
+    ros::Subscriber timer;
+
+    rosgraph_msgs::Clock time_var;
 
     /// \brief Constructor
     public: TernPlugin() {}    
@@ -72,6 +79,17 @@ namespace gazebo
         {
         std::cerr << "Invalid joint count, tern plugin not loaded\n";
         return;
+        }
+
+        // PID constants for actuators (Kp, Kd, Ki)
+        // PID_c = {{10.0, 1.0, 0.0},
+        //             {10.0, 1.0, 0.0},
+        //             {10.0, 1.0, 0.0},
+        //             {10.0, 1.0, 0.0}};
+        for (int j = 0; j < 4; j++) {
+            Kp[j] = 10.0;
+            Kd[j] = 1.0;
+            Ki[j] = 0.0;
         }
 
         // Store the model pointer for convenience.
@@ -136,6 +154,13 @@ namespace gazebo
             this -> actuators_sub[i] = this -> rosNode -> subscribe(solr);
         }
 
+        solr = ros::SubscribeOptions::create<rosgraph_msgs::Clock>(
+            "/clock", 
+            1,
+            boost::bind(&TernPlugin::time_cb, this, _1),
+            ros::VoidPtr(), &this -> rosQueue);
+        this -> timer = this -> rosNode -> subscribe(solr);
+
         // Spin up the queue helper thread.
         this->rosQueueThread =
         std::thread(std::bind(&TernPlugin::QueueThread, this));
@@ -159,27 +184,49 @@ namespace gazebo
     }
 
     void get_act_data(const std_msgs::Float32::ConstPtr& msg, int i) {
-        this -> actuator_input[i] = *msg;
+        this -> actuator_input[i] = msg -> data;
     }
 
+    void time_cb(const rosgraph_msgs::Clock::ConstPtr& msg) {
+        time_var = *msg;
+    }
+
+    
+    float curr_error[4];
+    float prev_error[4];
+    float delta_t = 0;
+    float control_torque;
+
     void elevonControlRoutine(int id) {
-        // float curr_error = this -> actuator_joint[id] -> GetAngle(0).Radians();
-        // float control_torque = Kp_e * error + Kd_e * 
+        this -> curr_error[id] = this -> actuator_joint[id] -> Position() - this -> actuator_input[id];
+        // std::cout << "Current Angle & Target Angle: " << this -> actuator_joint[id] -> Position() << " " << this -> actuator_input[id] << std::endl;
+        // std::cout << "Current Time Step: " << time_var.clock.sec + (time_var.clock.nsec / 1000000000.0) << "\n";
+        // std::cout << "Current Error: " << this -> curr_error[id] << "\n";
+        this -> delta_t = this -> curr_time - this -> prev_time;
+        // std::cout << "delta_t: " << delta_t << "\n";
+        // PD control
+        this -> control_torque = Kp[id] * this -> curr_error[id] + Kd[id] * (float)(this -> curr_error[id] - this -> prev_error[id]) / delta_t;
+        std::cout << "Contorl Torque: " << this -> control_torque << "\n";
+        // this -> actuator_joint[id] -> SetForce(0, this -> control_torque);
+        this -> prev_error[id] = this -> curr_error[id];
     }
 
     public: void updateJointStates() {
+        this -> curr_time = time_var.clock.sec + (time_var.clock.nsec / 1000000000.0);
         // this -> actuator_input = data;
         // Joint 0 and 1 are motor joints (Left and Right)
         // Joint 2 and 3 are elevon joints (Left and Right)
         
-        std::cout << "Actuator Inputs:\n";
+        // std::cout << "Actuator Inputs:\n";
 
-        for (int i = 0; i < 4; i++) {
-            std::cout << actuator_input[i].data << " ";
-        }
+        // for (int i = 0; i < 4; i++) {
+        //     std::cout << actuator_input[i].data << " ";
+        // }
 
-        std::cout << "\n";
-        // elevonControlRoutine(2);
+        // std::cout << "\n";
+        elevonControlRoutine(2);
+
+        this -> prev_time = this -> curr_time;
     }
   };
 
