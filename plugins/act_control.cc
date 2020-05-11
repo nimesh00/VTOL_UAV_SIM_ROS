@@ -16,6 +16,8 @@
 #include "std_msgs/Time.h"
 #include "rosgraph_msgs/Clock.h"
 
+#define MAX_SERVO_TRQ 10
+
 namespace gazebo
 {
   /// \brief A plugin to control a Velodyne sensor.
@@ -83,11 +85,11 @@ namespace gazebo
 
         // PID constants for actuators (Kp, Kd, Ki)
         // PID_c = {{10.0, 1.0, 0.0},
-        //             {10.0, 1.0, 0.0},
-        //             {10.0, 1.0, 0.0},
-        //             {10.0, 1.0, 0.0}};
+        //          {10.0, 1.0, 0.0},
+        //          {10.0, 1.0, 0.0},
+        //          {10.0, 1.0, 0.0}};
         for (int j = 0; j < 4; j++) {
-            Kp[j] = 10.0;
+            Kp[j] = 30.0;
             Kd[j] = 1.0;
             Ki[j] = 0.0;
         }
@@ -106,7 +108,7 @@ namespace gazebo
         // }
 
         // setting 5 N-m torque along the 0-axis(z-axis)
-        this->actuator_joint[1]->SetForce(0, 5);
+        // this->actuator_joint[2]->SetForce(1, 5);
 
 
         // Set the joint's target velocity. This target velocity is just
@@ -194,21 +196,42 @@ namespace gazebo
     
     float curr_error[4];
     float prev_error[4];
-    float delta_t = 0;
+    float delta_t;
     float control_torque;
+    float control_torque_tmp;
+
+    float get_control_torque_elevon(int id) {
+        this -> control_torque_tmp = this -> Kp[id] * this -> curr_error[id] + this -> Kd[id] * (float)(this -> curr_error[id] - this -> prev_error[id]) / this -> delta_t;
+        if (this -> control_torque_tmp > MAX_SERVO_TRQ) {
+            return MAX_SERVO_TRQ;
+        } else if (this -> control_torque_tmp < -MAX_SERVO_TRQ) {
+            return -MAX_SERVO_TRQ;
+        } else {
+            return this -> control_torque_tmp;
+        }
+    }
 
     void elevonControlRoutine(int id) {
-        this -> curr_error[id] = this -> actuator_joint[id] -> Position() - this -> actuator_input[id];
+        this -> curr_error[id] = -1 * (this -> actuator_joint[id] -> Position() - this -> actuator_input[id]);
+        // std::cout << "Current Error: " << this -> curr_error[id] << "\n";
+        if (this -> curr_error[id] < 0.001 && this -> curr_error[id] > -0.001) {
+            return;
+        }
         // std::cout << "Current Angle & Target Angle: " << this -> actuator_joint[id] -> Position() << " " << this -> actuator_input[id] << std::endl;
         // std::cout << "Current Time Step: " << time_var.clock.sec + (time_var.clock.nsec / 1000000000.0) << "\n";
-        // std::cout << "Current Error: " << this -> curr_error[id] << "\n";
         this -> delta_t = this -> curr_time - this -> prev_time;
+        if (this -> delta_t == 0) {
+            return;
+        }
+        // std::cout << "Error Rate: " << (this -> curr_error[id] - this -> prev_error[id]) / this -> delta_t << "\n";
         // std::cout << "delta_t: " << delta_t << "\n";
         // PD control
-        this -> control_torque = Kp[id] * this -> curr_error[id] + Kd[id] * (float)(this -> curr_error[id] - this -> prev_error[id]) / delta_t;
+        this -> control_torque = get_control_torque_elevon(id);
         std::cout << "Contorl Torque: " << this -> control_torque << "\n";
-        // this -> actuator_joint[id] -> SetForce(0, this -> control_torque);
+        this -> actuator_joint[id] -> SetForce(0, this -> control_torque);
+        // this->actuator_joint[id]->SetForce(1, 5);
         this -> prev_error[id] = this -> curr_error[id];
+        return;
     }
 
     public: void updateJointStates() {
@@ -225,6 +248,7 @@ namespace gazebo
 
         // std::cout << "\n";
         elevonControlRoutine(2);
+        elevonControlRoutine(3);
 
         this -> prev_time = this -> curr_time;
     }
