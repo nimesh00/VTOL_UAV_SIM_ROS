@@ -6,8 +6,8 @@
     <!-- <origin rpy="0 0 0" xyz="0 0 0.14"> -->
     <inertial>
       <mass value="0.5"/>
-      <origin rpy="0  0  0" xyz="0     0     0.157"/>
-      <inertia ixx="0.0147563" ixy="0" ixz="0" iyy="0.00638929" iyz="0" izz="0.0177"/>
+      <origin rpy="0  0  0" xyz="0     0     0"/>
+      <inertia ixx="0.019804667" ixy="0" ixz="0" iyy="0.00420416" iyz="0" izz="0.017475"/>
     </inertial>
     <collision name="base_link_collision">
       <origin rpy="0  0  0" xyz="0    0    0"/>
@@ -48,15 +48,16 @@
   </link>
   <link name="rotor_left">
     <inertial>
-      <mass value="0.005"/>
-      <origin rpy="0  0  0" xyz="0 -0.205 0.17"/>
+      <mass value="0.01"/>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
       <!-- <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/> -->
-      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/>
+      <inertia ixx="3.541e-07" ixy="0" ixz="0" iyy="3.335e-5" iyz="0" izz="3.336e-5"/>
     </inertial>
     <collision name="rotor_left_collision">
       <origin rpy="0  0  0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.005" radius="0.1"/>
+        <!-- <cylinder length="0.005" radius="0.1"/> -->
+        <box size="0.20 0.02 0.005"/>
       </geometry>
     </collision>
     <visual name="rotor_left_visual">
@@ -68,15 +69,16 @@
   </link>
   <link name="rotor_right">
     <inertial>
-      <mass value="0.005"/>
-      <origin rpy="0  0  0" xyz="0 0.205 0.17"/>
+      <mass value="0.01"/>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
       <!-- <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/> -->
-      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000166704" iyz="0" izz="0.000167604"/>
+      <inertia ixx="3.541e-07" ixy="0" ixz="0" iyy="3.335e-5" iyz="0" izz="3.336e-5"/>
     </inertial>
     <collision name="rotor_right_collision">
       <origin rpy="0  0  0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.005" radius="0.1"/>
+        <!-- <cylinder length="0.005" radius="0.1"/> -->
+        <box size="0.20 0.02 0.005"/>
       </geometry>
     </collision>
     <visual name="rotor_right_visual">
@@ -88,9 +90,9 @@
   </link>
   <link name="left_elevon">
     <inertial>
-      <mass value="0.001"/>
-      <origin rpy="0  0  0" xyz="0      -0.225    0"/>
-      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+      <mass value="0.02"/>
+      <origin rpy="0  0  0" xyz="0      0.02    -0.045"/>
+      <inertia ixx="7.719e-5" ixy="0.0" ixz="0.0" iyy="1.118e-5" iyz="0.0" izz="6.645e-5"/>
     </inertial>
     <visual name="left_elevon_visual">
       <origin rpy="0    1.57079  1.57079" xyz="0.005 -0.31  0.133"/>
@@ -109,9 +111,9 @@
   </link>
   <link name="right_elevon">
     <inertial>
-      <mass value="0.001"/>
-      <origin rpy="0  0  0" xyz="0       0.225    0"/>
-      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+      <mass value="0.02"/>
+      <origin rpy="0  0  0" xyz="0       -0.02    -0.045"/>
+      <inertia ixx="7.719e-5" ixy="0.0" ixz="0.0" iyy="1.118e-5" iyz="0.0" izz="6.645e-5"/>
     </inertial>
     <visual name="right_elevon_visual">
       <origin rpy="0    1.57079  1.57079" xyz="0.005 -0.347 0.133"/>
@@ -140,7 +142,7 @@
     <child link="rotor_left"/>
     <origin rpy="0  0  0" xyz="0    -0.205  0.152"/>
     <axis xyz="0  0  1"/>
-    <limit effort="1.0" lower="-1000" upper="1000" velocity="1000.0"/>
+    <!-- <limit effort="10.0" velocity="1000.0"/> -->
     <!-- <dynamics damping="0.01" friction="0.0" /> -->
   </joint>
   <joint name="right_rotor_joint" type="continuous">
@@ -148,7 +150,7 @@
     <child link="rotor_right"/>
     <origin rpy="0  0  0" xyz="0     0.205  0.152"/>
     <axis xyz="0  0  1"/>
-    <limit effort="1.0" lower="-1000" upper="1000" velocity="1000.0"/>
+    <!-- <limit effort="10.0" velocity="1000.0"/> -->
     <!-- <dynamics damping="0.01" friction="0.0" /> -->
   </joint>
   <joint name="left_elevon_joint" type="revolute">
@@ -213,7 +215,7 @@
     <robotNamespace>/tern</robotNamespace>
   </plugin>
 </gazebo>
-
+<!--
     <gazebo reference="base_link_inertia">
         <plugin name="left_wing" filename="libLiftDragPlugin.so">
           <a0>0.05984281113</a0>
@@ -272,7 +274,7 @@
           <accelerometerTurnOnBiasSigma>0.196</accelerometerTurnOnBiasSigma>
         </plugin>
     </gazebo>
-
+-->
     <gazebo>
     <!--
         <plugin name='left_motor_model' filename='libgazebo_motor_model.so'>
@@ -314,7 +316,7 @@
         -->
         <!-- <plugin name='rotors_gazebo_imu_plugin' filename='librotors_gazebo_imu_plugin.so'> -->
         
-
+<!--
         <plugin name="gps_plugin" filename="libgazebo_gps_plugin.so">
             <robotNamespace></robotNamespace>
             <gpsNoise>true</gpsNoise>
@@ -332,6 +334,6 @@
           <pubRate>10</pubRate>
           <baroTopic>/baro</baroTopic>
         </plugin>
-        
+    -->    
     </gazebo>  
 </robot>
