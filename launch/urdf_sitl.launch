@@ -1,0 +1,42 @@
+<launch>
+
+  <arg name="model" default="$(find tern)/description/tern/tern.urdf"/>
+  <arg name="gui" default="true" />
+  <!-- <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" /> -->
+  
+  
+  <arg name="world" default="$(find gazebo_ros)/worlds/empty.world"/>
+    <arg name="debug" default="false"/>
+    <arg name="verbose" default="true"/>
+    <arg name="paused" default="false"/>
+    <!-- Gazebo sim -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="verbose" value="$(arg verbose)"/>
+        <arg name="paused" value="$(arg paused)"/>
+    </include>
+  
+  <arg name="x_pos" default="0.0"/>
+  <arg name="y_pos" default="0.0"/>
+  <arg name="z_pos" default="0.0"/>
+  
+
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+    <!-- <param name="use_gui" value="$(arg gui)"/> -->
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model $(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+
+
+    <!--  
+  <rosparam file="$(find tern_control)/config/tern_control.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/tern" args="left_motor_controller right_motor_controller left_elevon_controller right_elevon_controller joint_state_controller"/>
+    
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+    <remap from="/joint_states" to="/tern/joint_states" />
+  </node>
+    -->
+</launch>
