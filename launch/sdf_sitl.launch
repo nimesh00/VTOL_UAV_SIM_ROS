@@ -14,7 +14,7 @@
     <arg name="est" default="ekf2"/>
     <arg name="vehicle" default="tern"/>
     <arg name="world" default="worlds/empty.world"/>
-    <arg name="sdf" default="$(find tern)/description/tern.sdf"/>
+    <arg name="sdf" default="$(find tern)/description/tern/tern.sdf"/>
     <!-- <env name="PX4_SIM_MODEL" value="iris" />
     <env name="PX4_ESTIMATOR" value="$(arg est)" /> -->
 
