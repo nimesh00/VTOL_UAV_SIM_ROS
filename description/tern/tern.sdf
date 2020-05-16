@@ -171,6 +171,8 @@
           <upper>1e+16</upper>
         </limit>
         <dynamics>
+          <!-- <damping>0.0001</damping> -->
+          <friction>0.1</friction>
           <spring_reference>0</spring_reference>
           <spring_stiffness>0</spring_stiffness>
         </dynamics>
@@ -240,6 +242,8 @@
           <upper>1e+16</upper>
         </limit>
         <dynamics>
+          <!-- <damping>0.0001</damping> -->
+          <friction>0.1</friction>
           <spring_reference>0</spring_reference>
           <spring_stiffness>0</spring_stiffness>
         </dynamics>
@@ -349,9 +353,7 @@
       </physics>
     </joint>
 
-    <plugin name="tern_control" filename="libtern_control.so">
-        <force>50</force>
-    </plugin>
+    <plugin name="tern_control" filename="libtern_control.so"/>
 
     <!-- <joint name='elevator_joint' type='revolute'>
       <parent>base_link</parent>
