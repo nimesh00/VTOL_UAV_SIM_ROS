@@ -1,3 +1,6 @@
+%% Calculates Thrust/Torque vs RPM relation for a given propeller using Blade Element Theory
+%% the t & q variables at the end represent the second order polynomial coefficients for the same
+
 clear, clc
 %chord length of blade assumed constant with radius (meters)
 chord=0.02;
