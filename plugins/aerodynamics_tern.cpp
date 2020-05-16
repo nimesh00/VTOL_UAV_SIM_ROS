@@ -200,7 +200,7 @@ namespace gazebo
     }
 
     void rotorControlRoutine(int id) {
-        this -> curr_error[id] = -1 * (this -> actuator_joint[id] -> GetVelocity(0) - this -> actuator_input[id] * 2 * M_PI / 60.0);
+        this -> curr_error[id] = -1 * (this -> actuator_joint[id] -> GetVelocity(0) - this -> actuator_input[id]);
         std::cout << "Current Error: " << this -> curr_error[id] << "\n";
         std::cout << "Current Velocity: " << this -> actuator_joint[id] -> GetVelocity(0) << std::endl;
         std::cout << "Target Velocity: " << this -> actuator_input[id] << std::endl;
