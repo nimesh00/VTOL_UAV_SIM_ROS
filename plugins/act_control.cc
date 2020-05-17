@@ -179,7 +179,7 @@ namespace gazebo
         time_var = *msg;
     }
 
-    
+    float target_rpm[2];    
     float curr_error[4];
     float prev_error[4];
     float delta_t;
@@ -199,13 +199,22 @@ namespace gazebo
         }
     }
 
+    float diff_val;
+
     void rotorControlRoutine(int id) {
-        this -> curr_error[id] = -1 * (this -> actuator_joint[id] -> GetVelocity(0) - this -> actuator_input[id] * 2 * M_PI / 60.0);
-        std::cout << "Current Error: " << this -> curr_error[id] << "\n";
-        std::cout << "Current Velocity: " << this -> actuator_joint[id] -> GetVelocity(0) << std::endl;
-        std::cout << "Target Velocity: " << this -> actuator_input[id] << std::endl;
-        this -> err_fraction = (this -> curr_error[id]) / this -> actuator_input[id];
-        std::cout << "Fractional Error: " << err_fraction << std::endl;
+        this -> diff_val = -1 * (this -> actuator_joint[id] -> GetVelocity(0) - this -> actuator_input[id]  * (2 * M_PI) / 60);
+        this -> target_rpm[id] += diff_val / 10;
+        // if (this -> target_rpm[id] < this -> actuator_input[id]) {
+        //     this -> target_rpm[id] += 10.0;
+        // } else if (this -> target_rpm[id] > this -> actuator_input[id]) {
+        //     this -> target_rpm[id] -= 10.0;
+        // }
+        this -> curr_error[id] = -1 * (this -> actuator_joint[id] -> GetVelocity(0) - this -> target_rpm[id]  * (2 * M_PI) / 60);
+        // std::cout << "Current Error: " << this -> curr_error[id] << "\n";
+        // std::cout << "Current RPM: " << this -> actuator_joint[id] -> GetVelocity(0) * 60 / (2 * M_PI) << std::endl;
+        // std::cout << "Target RPM: " << this -> target_rpm[id] << std::endl;
+        this -> err_fraction = (this -> curr_error[id]) / this -> target_rpm[id];
+        // std::cout << "Fractional Error: " << err_fraction << std::endl;
         if (abs(err_fraction) < 0.001) {
             return;
         }
@@ -216,14 +225,14 @@ namespace gazebo
         // PD control
         // this -> control_torque = get_control_torque_elevon(id);
         this -> control_torque = this -> Kp[id] * this -> curr_error[id] + this -> Kd[id] * (float)(this -> curr_error[id] - this -> prev_error[id]) / this -> delta_t;
-        std::cout << "P: " << this -> Kp[id] * this -> curr_error[id] << std::endl;
-        std::cout << "D: " << this -> Kd[id] * (float)(this -> curr_error[id] - this -> prev_error[id]) / this -> delta_t << std::endl;
+        // std::cout << "P: " << this -> Kp[id] * this -> curr_error[id] << std::endl;
+        // std::cout << "D: " << this -> Kd[id] * (float)(this -> curr_error[id] - this -> prev_error[id]) / this -> delta_t << std::endl;
         if (this -> control_torque > 10) {
             this -> control_torque = 10;
         } else if (this -> control_torque <= -10) {
             this -> control_torque = -10;
         }
-        std::cout << "Contorl Torque: " << this -> control_torque << "\n";
+        // std::cout << "Contorl Torque: " << this -> control_torque << "\n";
         this -> actuator_joint[id] -> SetForce(0, this -> control_torque);
         // this->actuator_joint[id]->SetForce(1, 5);
         this -> prev_error[id] = this -> curr_error[id];
@@ -243,13 +252,12 @@ namespace gazebo
         // PD control
         this -> control_torque = get_control_torque_elevon(id);
         this -> actuator_joint[id] -> SetForce(0, this -> control_torque);
-        // this->actuator_joint[id]->SetForce(1, 5);
         this -> prev_error[id] = this -> curr_error[id];
         return;
     }
 
     public: void updateJointStates() {
-        std::cout << "Seq: " << seq++ << std::endl;
+        // std::cout << "Seq: " << seq++ << std::endl;
         this -> curr_time = time_var.clock.sec + (time_var.clock.nsec / 1000000000.0);
 
         rotorControlRoutine(0);
