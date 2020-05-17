@@ -315,7 +315,7 @@
     <joint name='left_elevon_joint' type='revolute'>
       <parent>base_link</parent>
       <child>left_elevon</child>
-      <pose>0 0.09 0.0 0 0 3.14</pose>
+      <pose>0 0.09 0.0 0 0 0</pose>
       <axis>
         <xyz>0 1 0</xyz>
         <limit>
@@ -353,7 +353,8 @@
       </physics>
     </joint>
 
-    <plugin name="tern_control" filename="libtern_control.so"/>
+    <plugin name="tern_control" filename="libtern_act_control.so"/>
+    <plugin name="tern_aero" filename="libtern_aero.so"/>
 
     <!-- <joint name='elevator_joint' type='revolute'>
       <parent>base_link</parent>
