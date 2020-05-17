@@ -1,3 +1,6 @@
+%% Source: http://www.aerodynamics4students.com/propulsion/propel.m
+%% Theory: http://www.aerodynamics4students.com/propulsion/blade-element-propeller-theory.php
+
 clear, clc;
 %chord length of blade assumed constant with radius (meters)
 chord=0.02;
@@ -88,13 +91,13 @@ for V=1:10
   thrust=thrust+DtDr*rstep;
   torque=torque+DqDr*rstep;
  end
- thrust
- torque
- t(V + 1)=thrust/(rho*n*n*dia*dia*dia*dia);
- q(V + 1)=torque/(rho*n*n*dia*dia*dia*dia*dia);
- J(V + 1)=V/(n*dia);
- eff(V + 1)=J(V + 1)/2.0/pi*t(V + 1)/q(V + 1);
- icheck(V + 1)=itercheck;
+ THRUST(V) = thrust;
+ TORQUE(V) = torque;
+ t(V )=thrust/(rho*n*n*dia*dia*dia*dia);
+ q(V)=torque/(rho*n*n*dia*dia*dia*dia*dia);
+ J(V)=V/(n*dia);
+ eff(V)=J(V)/2.0/pi*t(V)/q(V);
+ icheck(V)=itercheck;
 end
 Jmax=max(J);
 Tmax=max(t);
