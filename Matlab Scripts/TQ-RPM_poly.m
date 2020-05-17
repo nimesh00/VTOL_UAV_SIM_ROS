@@ -22,7 +22,7 @@ xt=R;
 rstep=(xt-xs)/10;
 r1=[xs:rstep:xt];
 %calculate results for a range of velocities from 1 to 60 m/s
-V = 1;
+V = 0.1;
 rpm = 1000:1000:20000;
 for i=1:length(rpm)
   RPM = rpm(i);
@@ -31,6 +31,7 @@ for i=1:length(rpm)
  %initialise sums thrust (N) torque (Nm)
  thrust=0.0;
  torque=0.0;
+ a_sum = 0.0;
  %loop over each blade element
  for j=1:size(r1,2)
   rad=r1(j);
@@ -87,12 +88,15 @@ for i=1:length(rpm)
      itercheck=1;
     end
   end
+  a_sum = a_sum + a;
   thrust=thrust+DtDr*rstep;
   torque=torque+DqDr*rstep;
  end
+ A(i) = (a_sum) / sum;
  THRUST(i) = thrust;
  TORQUE(i) = torque;
 end
+A_poly = polyfit(rpm, A, 1)
 t = polyfit(rpm, THRUST, 2)
 q = polyfit(rpm, TORQUE, 2)
 plot(rpm, THRUST, 'b')
