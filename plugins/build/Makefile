@@ -124,6 +124,19 @@ roscpp_generate_messages_py/fast:
 .PHONY : roscpp_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named tern_act_control
+
+# Build rule for target.
+tern_act_control: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tern_act_control
+.PHONY : tern_act_control
+
+# fast build rule for target.
+tern_act_control/fast:
+	$(MAKE) -f CMakeFiles/tern_act_control.dir/build.make CMakeFiles/tern_act_control.dir/build
+.PHONY : tern_act_control/fast
+
+#=============================================================================
 # Target rules for targets named roscpp_generate_messages_eus
 
 # Build rule for target.
@@ -228,17 +241,17 @@ rosgraph_msgs_generate_messages_lisp/fast:
 .PHONY : rosgraph_msgs_generate_messages_lisp/fast
 
 #=============================================================================
-# Target rules for targets named tern_control
+# Target rules for targets named tern_aero
 
 # Build rule for target.
-tern_control: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tern_control
-.PHONY : tern_control
+tern_aero: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tern_aero
+.PHONY : tern_aero
 
 # fast build rule for target.
-tern_control/fast:
-	$(MAKE) -f CMakeFiles/tern_control.dir/build.make CMakeFiles/tern_control.dir/build
-.PHONY : tern_control/fast
+tern_aero/fast:
+	$(MAKE) -f CMakeFiles/tern_aero.dir/build.make CMakeFiles/tern_aero.dir/build
+.PHONY : tern_aero/fast
 
 #=============================================================================
 # Target rules for targets named std_msgs_generate_messages_cpp
@@ -337,7 +350,7 @@ act_control.o: act_control.cc.o
 
 # target to build an object file
 act_control.cc.o:
-	$(MAKE) -f CMakeFiles/tern_control.dir/build.make CMakeFiles/tern_control.dir/act_control.cc.o
+	$(MAKE) -f CMakeFiles/tern_act_control.dir/build.make CMakeFiles/tern_act_control.dir/act_control.cc.o
 .PHONY : act_control.cc.o
 
 act_control.i: act_control.cc.i
@@ -346,7 +359,7 @@ act_control.i: act_control.cc.i
 
 # target to preprocess a source file
 act_control.cc.i:
-	$(MAKE) -f CMakeFiles/tern_control.dir/build.make CMakeFiles/tern_control.dir/act_control.cc.i
+	$(MAKE) -f CMakeFiles/tern_act_control.dir/build.make CMakeFiles/tern_act_control.dir/act_control.cc.i
 .PHONY : act_control.cc.i
 
 act_control.s: act_control.cc.s
@@ -355,8 +368,35 @@ act_control.s: act_control.cc.s
 
 # target to generate assembly for a file
 act_control.cc.s:
-	$(MAKE) -f CMakeFiles/tern_control.dir/build.make CMakeFiles/tern_control.dir/act_control.cc.s
+	$(MAKE) -f CMakeFiles/tern_act_control.dir/build.make CMakeFiles/tern_act_control.dir/act_control.cc.s
 .PHONY : act_control.cc.s
+
+aerodynamics_tern.o: aerodynamics_tern.cc.o
+
+.PHONY : aerodynamics_tern.o
+
+# target to build an object file
+aerodynamics_tern.cc.o:
+	$(MAKE) -f CMakeFiles/tern_aero.dir/build.make CMakeFiles/tern_aero.dir/aerodynamics_tern.cc.o
+.PHONY : aerodynamics_tern.cc.o
+
+aerodynamics_tern.i: aerodynamics_tern.cc.i
+
+.PHONY : aerodynamics_tern.i
+
+# target to preprocess a source file
+aerodynamics_tern.cc.i:
+	$(MAKE) -f CMakeFiles/tern_aero.dir/build.make CMakeFiles/tern_aero.dir/aerodynamics_tern.cc.i
+.PHONY : aerodynamics_tern.cc.i
+
+aerodynamics_tern.s: aerodynamics_tern.cc.s
+
+.PHONY : aerodynamics_tern.s
+
+# target to generate assembly for a file
+aerodynamics_tern.cc.s:
+	$(MAKE) -f CMakeFiles/tern_aero.dir/build.make CMakeFiles/tern_aero.dir/aerodynamics_tern.cc.s
+.PHONY : aerodynamics_tern.cc.s
 
 vel.o: vel.cc.o
 
@@ -393,6 +433,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... roscpp_generate_messages_py"
+	@echo "... tern_act_control"
 	@echo "... roscpp_generate_messages_eus"
 	@echo "... edit_cache"
 	@echo "... roscpp_generate_messages_lisp"
@@ -402,7 +443,7 @@ help:
 	@echo "... rosgraph_msgs_generate_messages_eus"
 	@echo "... vel"
 	@echo "... rosgraph_msgs_generate_messages_lisp"
-	@echo "... tern_control"
+	@echo "... tern_aero"
 	@echo "... std_msgs_generate_messages_cpp"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... rosgraph_msgs_generate_messages_py"
@@ -413,6 +454,9 @@ help:
 	@echo "... act_control.o"
 	@echo "... act_control.i"
 	@echo "... act_control.s"
+	@echo "... aerodynamics_tern.o"
+	@echo "... aerodynamics_tern.i"
+	@echo "... aerodynamics_tern.s"
 	@echo "... vel.o"
 	@echo "... vel.i"
 	@echo "... vel.s"

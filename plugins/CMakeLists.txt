@@ -12,8 +12,11 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 # Build our plugin
-add_library(tern_control SHARED act_control.cc)
-target_link_libraries(tern_control ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
+add_library(tern_act_control SHARED act_control.cc)
+target_link_libraries(tern_act_control ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
+
+add_library(tern_aero SHARED aerodynamics_tern.cc)
+target_link_libraries(tern_aero ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
 
 # Build the stand-alone test program
 add_executable(vel vel.cc)
