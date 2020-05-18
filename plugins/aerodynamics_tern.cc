@@ -29,7 +29,7 @@
 #define D 0.254 // 0.0254 * 10"
 #define pitch 0.127 // 0.0254 * 4.5"
 #define rho 1.225 // air density in Kg/m^3
-
+#define l 0.2145 // 0.629 / 2 - 0.10
 // #define As(r) D^2 * (1 + a(r)) / (1 + 2 * a(r))
 #define Verr 0.1
 /* For Chosen Verr */
@@ -39,7 +39,8 @@
 #define As 2.06e-2 // D * 0.0811021
 #define Ae 2.4e-2 // 0.0811021 * 0.199357 m^2
 #define Awx 3.8e-2 // 0.20 * 0.1914711 m^2
-#define Awy 8.177e-3// 0.03 * 0.2725732 m^2
+#define Awy 8.177e-3 // 0.03 * 0.2725732 m^2
+#define Awz 8.0e-3 // 2 * 0.02 * 0.20
 
 namespace gazebo
 {
@@ -193,7 +194,7 @@ namespace gazebo
         this -> torque = (this -> omega < 0 ? -1 : 1) * (Q2 * RPM * RPM + Q1 * RPM + Q0) * (1 - (vel.Z()) / Vcr);
         // std::cout << "Applied Thrust: " << this -> thrust << std::endl;
         if (!isnan(this -> torque)) {
-            // std::cout << "Applied Torque: " << this -> torque << std::endl;
+            std::cout << "Applied Torque: " << this -> torque << std::endl;
         }
         this -> links[2 + id] -> AddRelativeForce(ignition::math::Vector3d(0, 0, thrust));
         // std::cout << "Force on body: " << this -> links[0] -> RelativeForce() << std::endl;
@@ -237,14 +238,14 @@ namespace gazebo
         this -> FxM = -1 * rho * Ae * (this -> Vnet * this -> Vnet) * cos(this -> phi) * cos(this -> phi) * cos(this -> delta);
         this -> Fz = this -> FzR + this -> FzM;
         this -> Fx = this -> FxR + this -> FxM;
-        this -> torque = -1 * 0.045 * (Fx * cos(phi) + Fz * sin(phi));
+        this -> torque = -1 * 0.045 * (Fx * cos(this -> delta) + Fz * sin(this -> delta));
         if (isnan(this -> Fx) || isnan(this -> Fz) || isnan(this -> torque)) {
             return;
         }
         // std::cout << "Slipstream Velocity: " << this -> Vs << std::endl;
         // std::cout << "Z Velocity: " << this -> vel.Z() << std::endl;
-        // std::cout << "Z force: " << this -> FzR + this -> FzM << std::endl;
-        // std::cout << "X force: " << this -> FxR + this -> FxM << std::endl;
+        // std::cout << "Z force: " << this -> Fz << std::endl;
+        // std::cout << "X force: " << this -> Fx << std::endl;
         // std::cout << "Torque: " << this -> torque << std::endl;
         // this -> links[l_id] -> AddLinkForce(ignition::math::Vector3d(Fx, 0, Fz), ignition::math::Vector3d(0, 0, -0.045));
         this -> links[l_id] -> AddRelativeForce(ignition::math::Vector3d(this -> Fx, 0, this -> Fz));
@@ -252,12 +253,21 @@ namespace gazebo
         // std::cout << "Force on Elevon " << id << ": " << this -> links[l_id] -> RelativeForce() << std::endl;
     }
 
-    void setPropulsionForces() {
-        
-    }
+    float FbT[3];
+    float TbR[3];
+    float thetab[3];
+    ignition::math::Vector3d body_omega;
+    void setBodyForces() {
+        this -> vel = this -> links[0] -> RelativeLinearVel();
+        this -> FbT[0] = -1 * rho * 2 * Awx * abs(this -> vel.X()) * this -> vel.X();
+        this -> FbT[1] = -1 * rho * Awy * abs(this -> vel.Y()) * this -> vel.Y();
+        this -> FbT[2] = -1 * rho * 2 * Awz * abs(this -> vel.Z()) * this -> vel.Z();        
+        this -> links[0] -> AddRelativeForce(ignition::math::Vector3d(FbT[0], FbT[1], FbT[2]));
 
-    void setMotionForces() {
-
+        this -> body_omega = this -> links[0] -> RelativeAngularVel();
+        // std::cout << "Body Angular Vel: " << this -> body_omega << std::endl;
+        this -> TbR[3] = -2 * rho * Awx * l * l * l * abs(this -> body_omega.Z()) * this -> body_omega.Z();
+        this -> links[0] -> AddRelativeTorque(ignition::math::Vector3d(0, 0, TbR[3]));
     }
 
     public: void updateJointStates() {
@@ -271,6 +281,7 @@ namespace gazebo
         setForceOnRotor(1);
         setForceOnElevon(2, 0, 4);
         setForceOnElevon(3, 1, 5);
+        setBodyForces();
         // setMotionForces();
 
         this -> prev_time = this -> curr_time;
